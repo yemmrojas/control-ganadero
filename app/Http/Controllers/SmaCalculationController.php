@@ -19,16 +19,26 @@ class SmaCalculationController extends Controller
      *
      * Recibe los parámetros de consulta validados, ejecuta el cálculo
      * de cruces de SMA y retorna el resultado como JSON.
+     * 
+     * Las fechas recibidas del frontend están en la zona horaria local del usuario.
+     * Se convierten a UTC para consultar la API de Binance correctamente.
      */
     public function calculate(CalculateSmaRequest $request): JsonResponse
     {
         $validated = $request->validated();
+        
+        // Obtener la zona horaria del usuario (por defecto UTC si no se envía)
+        $userTimezone = $validated['timezone'] ?? 'UTC';
+
+        // Parsear las fechas en la zona horaria del usuario y convertir a UTC
+        $startDate = Carbon::parse($validated['start_date'], $userTimezone)->utc();
+        $endDate = Carbon::parse($validated['end_date'], $userTimezone)->utc();
 
         $requestData = new SmaRequestData(
             market: $validated['market'],
             interval: $validated['interval'],
-            startDate: Carbon::parse($validated['start_date'])->utc(),
-            endDate: Carbon::parse($validated['end_date'])->utc(),
+            startDate: $startDate,
+            endDate: $endDate,
             shortPeriod: (int) $validated['short_period'],
             longPeriod: (int) $validated['long_period'],
         );

@@ -129,6 +129,59 @@ describe('SMA Calculation API', function () {
             'long_period' => 3,
         ]);
     });
+
+    it('correctly handles user timezone when parsing dates', function () {
+        // Mock de Binance API
+        Http::fake([
+            'api.binance.com/*' => Http::response([
+                [1729468800000, '62000', '62500', '61800', '62340.50', '100', 1729470600000],
+            ], 200),
+        ]);
+
+        // Usuario en US/Eastern (UTC-5) selecciona 2024-10-21 00:00
+        $response = $this->postJson('/api/sma-crossover', [
+            'market' => 'BTCUSDT',
+            'interval' => '30m',
+            'start_date' => '2024-10-21 00:00:00',
+            'end_date' => '2024-10-21 06:00:00',
+            'short_period' => 2,
+            'long_period' => 3,
+            'timezone' => 'America/New_York', // US/Eastern
+        ]);
+
+        $response->assertStatus(200);
+
+        // Verificar que las fechas se guardaron correctamente en UTC
+        $query = \App\Models\SmaQuery::latest()->first();
+        
+        // 2024-10-21 00:00 en America/New_York = 2024-10-21 04:00 UTC (durante DST)
+        // o 2024-10-21 05:00 UTC (fuera de DST)
+        expect($query->start_date->timezone->getName())->toBe('UTC');
+        expect($query->end_date->timezone->getName())->toBe('UTC');
+    });
+
+    it('defaults to UTC when no timezone is provided', function () {
+        Http::fake([
+            'api.binance.com/*' => Http::response([
+                [1729468800000, '62000', '62500', '61800', '62340.50', '100', 1729470600000],
+            ], 200),
+        ]);
+
+        $response = $this->postJson('/api/sma-crossover', [
+            'market' => 'BTCUSDT',
+            'interval' => '30m',
+            'start_date' => '2024-10-21 00:00:00',
+            'end_date' => '2024-10-21 06:00:00',
+            'short_period' => 2,
+            'long_period' => 3,
+            // Sin timezone
+        ]);
+
+        $response->assertStatus(200);
+
+        $query = \App\Models\SmaQuery::latest()->first();
+        expect($query->start_date->timezone->getName())->toBe('UTC');
+    });
 });
 
 describe('SMA History API', function () {

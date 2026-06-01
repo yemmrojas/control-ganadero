@@ -227,7 +227,13 @@ const calculateCrossovers = async () => {
   result.value = null;
 
   try {
-    const response = await axios.post('/api/sma-crossover', form.value);
+    // Detectar la zona horaria del navegador del usuario
+    const userTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+    
+    const response = await axios.post('/api/sma-crossover', {
+      ...form.value,
+      timezone: userTimezone
+    });
     result.value = response.data.data;
   } catch (error) {
     if (error.response?.data?.errors) {

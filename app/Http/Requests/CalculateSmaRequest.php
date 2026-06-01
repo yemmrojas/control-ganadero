@@ -56,6 +56,7 @@ class CalculateSmaRequest extends FormRequest
             'end_date' => ['required', 'date', 'after:start_date'],
             'short_period' => ['required', 'integer', 'min:1'],
             'long_period' => ['required', 'integer', 'min:2', 'gt:short_period'],
+            'timezone' => ['nullable', 'string', 'timezone'],
         ];
     }
 
