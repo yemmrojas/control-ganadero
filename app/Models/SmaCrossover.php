@@ -23,7 +23,7 @@ class SmaCrossover extends Model
         ];
     }
 
-    public function query(): BelongsTo
+    public function smaQuery(): BelongsTo
     {
         return $this->belongsTo(SmaQuery::class, 'sma_query_id');
     }
