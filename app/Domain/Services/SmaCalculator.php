@@ -1,8 +1,16 @@
 <?php
 
-namespace App\Services\Math;
+namespace App\Domain\Services;
 
-class SmaCalculator implements SmaCalculatorInterface
+use App\Domain\Contracts\SmaCalculatorInterface;
+
+/**
+ * Servicio de dominio para cálculo de SMA y detección de cruces.
+ * 
+ * Implementa la lógica de negocio pura sin dependencias externas.
+ * Calcula medias móviles simples y detecta Golden/Death Cross patterns.
+ */
+final class SmaCalculator implements SmaCalculatorInterface
 {
     /**
      * {@inheritdoc}

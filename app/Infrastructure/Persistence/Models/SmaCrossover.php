@@ -1,10 +1,16 @@
 <?php
 
-namespace App\Models;
+namespace App\Infrastructure\Persistence\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
+/**
+ * Modelo Eloquent para cruces de SMA.
+ * 
+ * Representa un punto de cruce entre SMAs corta y larga.
+ * Vive en Infrastructure/Persistence porque es específico de Eloquent.
+ */
 class SmaCrossover extends Model
 {
     protected $fillable = [

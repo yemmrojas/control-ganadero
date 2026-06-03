@@ -1,11 +1,17 @@
 <?php
 
-namespace App\Http\Requests;
+namespace App\Interfaces\Http\Requests;
 
 use Carbon\Carbon;
 use Illuminate\Foundation\Http\FormRequest;
 
-class CalculateSmaRequest extends FormRequest
+/**
+ * Form Request para validación de solicitud de cálculo de SMA.
+ * 
+ * Vive en Interfaces porque es específico del framework HTTP.
+ * Valida reglas de negocio y restricciones técnicas.
+ */
+final class CalculateSmaRequest extends FormRequest
 {
     /**
      * Mercados permitidos según el documento de especificaciones.

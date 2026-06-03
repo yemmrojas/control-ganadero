@@ -1,13 +1,20 @@
 <?php
 
-namespace App\Services\Binance;
+namespace App\Infrastructure\ExternalServices;
 
-use Carbon\Carbon;
+use App\Domain\Contracts\BinanceClientInterface;
+use DateTimeImmutable;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Http\Client\RequestException;
 
-class BinanceClient implements BinanceClientInterface
+/**
+ * Implementación de cliente HTTP para Binance Spot API.
+ * 
+ * Vive en Infrastructure porque depende de Illuminate\Http y servicios externos.
+ * Implementa el contrato definido en Domain.
+ */
+final class BinanceClient implements BinanceClientInterface
 {
     /**
      * URL base de la API pública de Binance Spot.
@@ -40,18 +47,22 @@ class BinanceClient implements BinanceClientInterface
      * Realiza peticiones paginadas iterativas cuando el rango de fechas
      * requiere más de 1000 velas en total.
      */
-    public function getKlines(string $symbol, string $interval, Carbon $startTime, Carbon $endTime): array
-    {
+    public function getKlines(
+        string $symbol,
+        string $interval,
+        DateTimeImmutable $startTime,
+        DateTimeImmutable $endTime
+    ): array {
         $allKlines = [];
-        $currentStartTime = $startTime->getTimestampMs();
-        $endTimeMs = $endTime->getTimestampMs();
+        $currentStartTime = (int) ($startTime->getTimestamp() * 1000); // Convertir a milisegundos
+        $endTimeMs = (int) ($endTime->getTimestamp() * 1000);
         $requestCount = 0;
 
         Log::info('Binance API: Starting klines fetch', [
             'symbol' => $symbol,
             'interval' => $interval,
-            'start' => $startTime->toIso8601String(),
-            'end' => $endTime->toIso8601String(),
+            'start' => $startTime->format('c'),
+            'end' => $endTime->format('c'),
         ]);
 
         while ($currentStartTime < $endTimeMs) {

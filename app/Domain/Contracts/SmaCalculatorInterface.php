@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Services\Math;
+namespace App\Domain\Contracts;
 
 interface SmaCalculatorInterface
 {

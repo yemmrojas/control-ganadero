@@ -1,6 +1,6 @@
 <?php
 
-use App\Services\Math\SmaCalculator;
+use App\Domain\Services\SmaCalculator;
 
 describe('SmaCalculator', function () {
     beforeEach(function () {

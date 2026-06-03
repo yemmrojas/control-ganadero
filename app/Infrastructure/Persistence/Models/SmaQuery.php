@@ -1,10 +1,16 @@
 <?php
 
-namespace App\Models;
+namespace App\Infrastructure\Persistence\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
+/**
+ * Modelo Eloquent para consultas de SMA.
+ * 
+ * Representa una consulta histórica de cálculo de cruces de SMA.
+ * Vive en Infrastructure/Persistence porque es específico de Eloquent.
+ */
 class SmaQuery extends Model
 {
     protected $fillable = [
