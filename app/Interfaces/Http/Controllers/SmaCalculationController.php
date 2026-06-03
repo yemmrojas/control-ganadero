@@ -1,17 +1,31 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Interfaces\Http\Controllers;
 
-use App\Actions\CalculateAndStoreCrossoversAction;
-use App\DTOs\SmaRequestData;
-use App\Http\Requests\CalculateSmaRequest;
+use App\Application\DTOs\SmaRequestData;
+use App\Application\UseCases\CalculateAndStoreCrossoversUseCase;
+use App\Interfaces\Http\Requests\CalculateSmaRequest;
 use Carbon\Carbon;
+use DateTimeImmutable;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Routing\Controller;
 
-class SmaCalculationController extends Controller
+/**
+ * Controlador para cálculo de cruces de SMA.
+ * 
+ * Responsabilidades:
+ * - Recibir request HTTP
+ * - Validar entrada (delegado a FormRequest)
+ * - Convertir datos de entrada a DTO
+ * - Invocar caso de uso
+ * - Serializar respuesta
+ * 
+ * Sin lógica de negocio ni acceso directo a BD.
+ */
+final class SmaCalculationController extends Controller
 {
     public function __construct(
-        private CalculateAndStoreCrossoversAction $calculateAction
+        private CalculateAndStoreCrossoversUseCase $calculateUseCase
     ) {}
 
     /**
@@ -34,16 +48,18 @@ class SmaCalculationController extends Controller
         $startDate = Carbon::parse($validated['start_date'], $userTimezone)->utc();
         $endDate = Carbon::parse($validated['end_date'], $userTimezone)->utc();
 
+        // Convertir Carbon a DateTimeImmutable para el DTO
         $requestData = new SmaRequestData(
             market: $validated['market'],
             interval: $validated['interval'],
-            startDate: $startDate,
-            endDate: $endDate,
+            startDate: DateTimeImmutable::createFromMutable($startDate),
+            endDate: DateTimeImmutable::createFromMutable($endDate),
             shortPeriod: (int) $validated['short_period'],
             longPeriod: (int) $validated['long_period'],
         );
 
-        $result = $this->calculateAction->execute($requestData);
+        // Ejecutar caso de uso
+        $result = $this->calculateUseCase->execute($requestData);
 
         return response()->json([
             'success' => true,

@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Http;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use App\Infrastructure\Persistence\Models\SmaQuery;
 
 uses(RefreshDatabase::class);
 
@@ -152,7 +153,7 @@ describe('SMA Calculation API', function () {
         $response->assertStatus(200);
 
         // Verificar que las fechas se guardaron correctamente en UTC
-        $query = \App\Models\SmaQuery::latest()->first();
+        $query = SmaQuery::latest()->first();
         
         // 2024-10-21 00:00 en America/New_York = 2024-10-21 04:00 UTC (durante DST)
         // o 2024-10-21 05:00 UTC (fuera de DST)
@@ -179,7 +180,7 @@ describe('SMA Calculation API', function () {
 
         $response->assertStatus(200);
 
-        $query = \App\Models\SmaQuery::latest()->first();
+        $query = SmaQuery::latest()->first();
         expect($query->start_date->timezone->getName())->toBe('UTC');
     });
 });
@@ -197,7 +198,7 @@ describe('SMA History API', function () {
 
     it('returns list of queries', function () {
         // Crear una consulta de prueba
-        $query = \App\Models\SmaQuery::create([
+        $query = SmaQuery::create([
             'market' => 'BTCUSDT',
             'interval' => '30m',
             'start_date' => '2024-10-21 00:00:00',
@@ -230,7 +231,7 @@ describe('SMA History API', function () {
 
     it('returns query details with crossovers', function () {
         // Crear una consulta con cruces
-        $query = \App\Models\SmaQuery::create([
+        $query = SmaQuery::create([
             'market' => 'BTCUSDT',
             'interval' => '30m',
             'start_date' => '2024-10-21 00:00:00',

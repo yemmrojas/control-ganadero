@@ -1,7 +1,7 @@
 <?php
 
-use App\Http\Controllers\SmaCalculationController;
-use App\Http\Controllers\SmaHistoryController;
+use App\Interfaces\Http\Controllers\SmaCalculationController;
+use App\Interfaces\Http\Controllers\SmaHistoryController;
 use Illuminate\Support\Facades\Route;
 
 /*

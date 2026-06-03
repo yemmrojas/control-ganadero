@@ -78,10 +78,10 @@ Este archivo contiene el seguimiento detallado de las tareas en ejecución del p
   - [x] Test de listado de consultas
   - [x] Test de detalle de consulta con cruces
   - [x] Test de error 404 para consulta inexistente
-- [x] Ejecutar suite completa de tests (`php artisan test`) - 18 tests pasando ✓
+- [x] Ejecutar suite completa de tests (`php artisan test`) - 20 tests pasando ✓
 
 ### Fase 5: Verificación y Cierre
-- [x] Correr tests automatizados (`php artisan test`) y verificar aprobación - ✓ 18 tests pasando
+- [x] Correr tests automatizados (`php artisan test`) y verificar aprobación - ✓ 20 tests pasando
 - [x] Verificar que los servicios locales están corriendo correctamente
 - [x] Actualizar `README.md` del proyecto con documentación completa
 - [x] Documentar arquitectura, API endpoints y guía de uso
