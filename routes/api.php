@@ -19,4 +19,4 @@ Route::post('/sma-crossover', [SmaCalculationController::class, 'calculate']);
 
 // Endpoints de historial de consultas
 Route::get('/sma-history', [SmaHistoryController::class, 'index']);
-Route::get('/sma-history/{id}', [SmaHistoryController::class, 'show']);
+Route::get('/sma-history/{id}', [SmaHistoryController::class, 'show'])->whereNumber('id');

@@ -276,4 +276,10 @@ describe('SMA History API', function () {
 
         $response->assertStatus(404);
     });
+
+    it('returns 404 for invalid malformed non-numeric query id', function () {
+        $response = $this->getJson('/api/sma-history/foo');
+
+        $response->assertStatus(404);
+    });
 });
